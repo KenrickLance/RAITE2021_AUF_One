@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserModel
 from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -16,8 +16,8 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from .forms import GenericModelMainForm, GenericModelForeignForm, CustomUserCreationForm, PasswordResetForm, PasswordResetConfirmForm, LoginForm
 
-from .forms import PeopleModelForm
-from .models import GenericModelForeign, GenericModelMain, PeopleModel
+from .forms import PeopleModelForm, VaccineModelForm, EstablishmentModelForm, HealthcareModelForm
+from .models import GenericModelForeign, GenericModelMain, PeopleModel, EstablishmentModel, RoleModel, TracingModel, HealthcareModel
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 import json
@@ -80,7 +80,13 @@ def delete_object(request, pk):
 
 def login_user(request):
     if request.user.is_authenticated:
-        return redirect(reverse(settings.LOGIN_REDIRECT_URL))
+        more_info = get_object_or_404(RoleModel, user_info=request.user)
+        if more_info.role == 'citizen':
+            return redirect('mainapp:personal_info_people')
+        elif more_info.role == 'healthcare':
+            return redirect('mainapp:alert_healthcare')
+        elif more_info.role == 'establishment':
+            return redirect('mainapp:trace_establishment')
     context = {}
     if request.method == 'POST':
         form = LoginForm()
@@ -89,7 +95,17 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
+            more_info = get_object_or_404(RoleModel, user_info=user)
+            print(more_info.role)
+            if more_info.role == 'citizen':
+                print(1)
+                return redirect('mainapp:personal_info_people')
+            elif more_info.role == 'healthcare':
+                print(2)
+                return redirect('mainapp:alert_healthcare')
+            elif more_info.role == 'establishment':
+                print(3)
+                return redirect('mainapp:trace_establishment')
         else:
             context['form'] = form
             messages.error(request, 'Invalid login credentials.')
@@ -259,11 +275,12 @@ def create_people(request):
             data = get_object_or_404(User, email=form1.cleaned_data['email'])
             
             form2.instance.user_info = data
-            form2.instance.role = 'citizen'
             if form2.is_valid():
                 form2.save()
+                role = RoleModel(user_info=data, role='citizen')
+                role.save()
                 messages.success(request, 'Account successfully created.')
-                return redirect(request.path_info)
+                return redirect("mainapp:login")
             else:
                 instance = get_object_or_404(User, email=form1.cleaned_data['email'])
                 instance.delete()
@@ -282,11 +299,174 @@ def create_people(request):
 def personal_info_people(request):
     instance = get_object_or_404(PeopleModel, user_info=request.user)
     context = {
-        'active_page':'Dashboard',
+        'active_page':'Personal',
         'form': PeopleModelForm(instance=instance),
         'instance':instance
     }
     return render(request, 'mainapp/people/personal_info.html', context)
+
+@login_required
+def vaccination_info_people(request):
+    if request.method == 'POST':
+        instance = get_object_or_404(GenericModelMain,pk=pk)
+        form = GenericModelMainForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Action succeeded.')
+            return redirect(request.path_info)
+        else:
+            messages.error(request, 'Action failed, validate your inputs.')
+    
+    instance = get_object_or_404(GenericModelMain,pk=pk)
+    
+    context = {
+        'active_page':'Vaccination Info',
+        'form': GenericModelMainForm(instance=instance),
+        'instance': instance
+        
+    }
+    return render(request, 'mainapp/update_object.html', context)
+    return render(request, 'mainapp/people/personal_info.html', context)
+
+
+
+
+
+def create_establishment(request):
+    if request.method == 'POST':
+        form1 = CustomUserCreationForm(request.POST,prefix="form1")
+        form2 = EstablishmentModelForm(request.POST, prefix="form2")
+        if form1.is_valid():
+            form1.save()
+            data = get_object_or_404(User, email=form1.cleaned_data['email'])
+            
+            form2.instance.user_info = data
+            form2.instance.role = 'establishment'
+            if form2.is_valid():
+                form2.save()
+                role = RoleModel(user_info=data, role='establishment')
+                role.save()
+                messages.success(request, 'Account successfully created.')
+                return redirect("mainapp:login")
+            else:
+                data.delete()
+                print(form2.errors)
+                messages.error(request, 'Action failed, validate your inputs.')
+        else:
+            print(form1.errors)
+            messages.error(request, 'Action failed, validate your inputs.')
+    context = {
+        'form1': CustomUserCreationForm(prefix="form1"),
+        'form2': EstablishmentModelForm(prefix="form2")
+    }
+    return render(request, 'mainapp/establishment/register.html', context)
+
+@login_required
+def trace_establishment(request):
+    if request.method == 'POST':
+        id = request.POST['user_info']
+        user_info = get_object_or_404(UserModel,id=id)
+        establishment = get_object_or_404(EstablishmentModel, user_info=request.user)
+
+        tracing = TracingModel(user_info=user_info.id,establishment=establishment.id)
+        tracing.save()
+        messages.success(request, 'Successfully added to contact tracing record.')
+        return redirect(request.path_info)
+    context = {
+        'active_page':'Tracing',
+        'establishment_name': get_object_or_404(EstablishmentModel, user_info=request.user)
+    }
+    id = request.GET.get('id')
+    
+    if id:
+        try:
+            id = int(id)
+        except:
+            id = 0
+        try:
+            person = get_object_or_404(UserModel, id=id)
+            details = get_object_or_404(PeopleModel, user_info = person)
+            context['person'] = person
+            context['details'] = details
+        except Exception as err:
+            print(err)
+    
+    
+    return render(request, 'mainapp/establishment/tracing.html', context)
+
+@login_required
+def view_trace_establishment(request):
+    all = TracingModel.objects.all()
+    all_data = []
+    for item in all:
+        user = get_object_or_404(UserModel,pk=item.user_info)
+        date = item.date
+        all_data.append(
+            {
+                'name':f"{user.last_name}, {user.first_name}",
+                'email': user.email,
+                'date':date
+            }
+        )
+    context = {
+        'active_page':'History',
+        'all_data': all_data,
+        'establishment_name': get_object_or_404(EstablishmentModel, user_info=request.user)
+    }
+    return render(request, 'mainapp/establishment/view_tracing.html', context)
+
+
+
+
+
+
+
+def create_healthcare(request):
+    if request.method == 'POST':
+        form1 = CustomUserCreationForm(request.POST,prefix="form1")
+        form2 = HealthcareModelForm(request.POST, prefix="form2")
+        if form1.is_valid():
+            form1.save()
+            data = get_object_or_404(User, email=form1.cleaned_data['email'])
+            
+            form2.instance.user_info = data
+            form2.instance.role = 'healthcare'
+            if form2.is_valid():
+                form2.save()
+                role = RoleModel(user_info=data, role='healthcare')
+                role.save()
+                messages.success(request, 'Account successfully created.')
+                return redirect("mainapp:login")
+            else:
+                data.delete()
+                print(form2.errors)
+                messages.error(request, 'Action failed, validate your inputs.')
+        else:
+            print(form1.errors)
+            messages.error(request, 'Action failed, validate your inputs.')
+    context = {
+        'form1': CustomUserCreationForm(prefix="form1"),
+        'form2': EstablishmentModelForm(prefix="form2")
+    }
+    return render(request, 'mainapp/healthcare/register.html', context)
+
+@login_required
+def alert_healthcare(request):
+    if request.method == 'POST':
+        id = request.POST['user_info']
+        user_info = get_object_or_404(UserModel,id=id)
+        establishment = get_object_or_404(EstablishmentModel, user_info=request.user)
+
+        
+        messages.success(request, 'Successfully added to contact tracing record.')
+        return redirect(request.path_info)
+    context = {
+        'active_page':'Tracing',
+        'establishment_name': get_object_or_404(HealthcareModel, user_info=request.user)
+    }
+    
+    return render(request, 'mainapp/healthcare/alert.html', context)
+
 
 
 

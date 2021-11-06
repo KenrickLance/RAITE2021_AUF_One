@@ -1,4 +1,4 @@
-{% extends 'mainapp/base.html' %}
+{% extends 'mainapp/people/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -6,14 +6,11 @@
     Personal Info
 </p>
 <div class="card p-5">
-    <div class="d-flex justify-content-end mb-3">
-        <h6 id='enable' class="info_update" style="cursor: pointer;"><span class="badge bg-success p-2"><i class="bi bi-check-circle-fill me-2"></i>Update information</span></h6>
-        <a class="d-none" href="{% url 'mainapp:personal_info_people' %}"><h6 class="info_update" style="cursor: pointer;"><span class="badge bg-secondary p-2"><i class="bi bi-x-circle-fill me-2"></i>Cancel update</span></h6></a>
-    </div>
-    
+    <p class="h5 fw-bold mb-3">Identifier number: {{user.id}}</p>
+    <hr class="my-3">
     <div id='display_info'>
         {% for key, value in instance.display_info.items %}
-        {% if key == "user info" or key == "role"%}
+        {% if key == "user info" or key == "role"  or key == "government_id" or key == "ID"%}
         {% else %}
         <p>
             <span class="fw-bold">{{key}}: </span> {{value}}

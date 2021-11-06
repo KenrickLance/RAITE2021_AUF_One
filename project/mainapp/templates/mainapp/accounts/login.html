@@ -72,7 +72,7 @@
         html,
 body {
   height: 100%;
-  background-image: url(https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80);
+  background-image: url(https://images.unsplash.com/photo-1594729974561-b7385e93b577?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1031&q=80);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -143,11 +143,11 @@ body {
         {% endif %}
     </div>
 
-<main class="form-signin px-5 py-3" style="background-color: rgba(82, 82, 82, 0.61); backdrop-filter: blur(5px); border-radius: 10px;">
+<main class="form-signin px-5 py-3" style="background-color: rgba(177, 177, 177, 0.3); backdrop-filter: blur(5px); border-radius: 10px;">
  
   
   <form method="POST" class="row" action="{% url 'mainapp:login' %}">
-    <img src='{% settings_value "APP_LOGO" %}' class="mb-3 mx-auto d-block" alt="" style="width: 180px !important;">
+    <img src='{% settings_value "APP_LOGO" %}' class="my-4 mx-auto d-block" alt="" style="width: 150px !important;">
     <div class="col col-12 mb-3">
         {% csrf_token %}
       <label class="form-label text-light">{{ form.username.label }}</label>
@@ -176,63 +176,47 @@ body {
 <div class="modal fade" id="sign_up_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg modal-dialog-scrollable" >
     <form class="modal-content"  method="POST" action='{% url "mainapp:user_create"%}' style="background-color: transparent !important; backdrop-filter: blur(25px); border-radius: 10px; color: white; ">
-        {% csrf_token %}
+
       <div class="modal-header" style="border-color: rgba(0,0,0,.2);">
-        <h2 class="modal-title" id="exampleModalLabel">Sign Up Form</h2>
+        <h2 class="modal-title" id="exampleModalLabel">Select Your Role</h2>
       </div>
       <div class="modal-body py-5 ">
-        <div class="row" >
-            <div class="col col-12 col-md-6 mb-3">
-                <label class="form-label">
-                    {{signup_form.last_name.label}}
-                </label>
-                {{signup_form.last_name|attr:"class:form-control" }}
-            </div>
-            <div class="col col-12 col-md-6 mb-3">
-                <label class="form-label">
-                    {{signup_form.first_name.label}}
-                </label>
-                {{signup_form.first_name|attr:"class:form-control" }}
-            </div>
-
-            <div class="col col-12 mb-3">
-                <label class="form-label">
-                    {{signup_form.username.label}}
-                </label>
-                {{signup_form.username|attr:"class:form-control" }}
-            </div>
-
-            <div class="col col-12 mb-3">
-                <label class="form-label">
-                    {{signup_form.email.label}}
-                </label>
-                {{signup_form.email|attr:"class:form-control" }}
-            </div>
-
-
-            <div class="col col-12 col-md-6 mb-3">
-                <label class="form-label">
-                    {{signup_form.password1.label}}
-                </label>
-                {{signup_form.password1|attr:"class:form-control" }}
-            </div>
-            <div class="col col-12 col-md-6 mb-3">
-                <label class="form-label">
-                    {{signup_form.password2.label}}
-                </label>
-                {{signup_form.password2|attr:"class:form-control" }}
-            </div>
+        <div class="row">
+          <div class="col col-12 col-md-4 role-select" id='{% url "mainapp:create_healthcare"%}'>
+            <img src='https://i.ibb.co/t2g5736/healthcare.png' class="mx-auto-d-block img-fluid">
+            <p class="text-center fw-bold h3">Healthcare</p>
+          </div>
+          <div class="col col-12 col-md-4 role-select" id='{% url "mainapp:create_people"%}'>
+            <img src='https://i.ibb.co/mTfP7NZ/citizen.png' class="mx-auto-d-block img-fluid">
+            <p class="text-center fw-bold h3">Citizen</p>
+          </div>
+          <div class="col col-12 col-md-4 role-select" id='{% url "mainapp:create_establishment"%}'>
+            <img src='https://i.ibb.co/HBck3z5/establishment.png' class="mx-auto-d-block img-fluid">
+            <p class="text-center fw-bold h3">Establishment</p>
+          </div>
         </div>
       </div>
       <div class="modal-footer" style="border-color: rgba(0,0,0,.2);">
         <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-        <button class="btn btn-success">Sign Up</button>
       </div>
     </form>
   </div>
 </div>
 
+<style>
+  .role-select {
+cursor: pointer;
+  }
+</style>
 
+<script>
+  Array.from(document.getElementsByClassName('role-select')).forEach(element => {
+    element.addEventListener('click', function() {
+      var url = element.id;
+      window.location.href = url;
+    });
+  });
+</script>
 
 <div class="modal fade" id="reset_password_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-dialog-scrollable" >

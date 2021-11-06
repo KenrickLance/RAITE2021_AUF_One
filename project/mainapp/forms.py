@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from .models import GenericModelMain, GenericModelForeign
-from .models import PeopleModel
+from .models import PeopleModel, VaccineModel, EstablishmentModel,HealthcareModel
 
 # date widget = forms.DateInput(attrs={'type': 'date'})
 # datetime widget = forms.DateInput(attrs={'type': 'datetime-local'})
@@ -22,10 +22,32 @@ class PeopleModelForm(ModelForm):
     class Meta:
         model = PeopleModel
         fields = '__all__'
-        exclude = ['user_info']
+        exclude = ['user_info','role']
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+class VaccineModelForm(ModelForm):
+    class Meta:
+        model = VaccineModel
+        fields = '__all__'
+        exclude = ['personal_info']
+        widgets = {
+            'first_dose_date': forms.DateInput(attrs={'type': 'date'}),
+             'second_dose_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+class EstablishmentModelForm(ModelForm):
+    class Meta:
+        model = EstablishmentModel
+        fields = '__all__'
+        exclude = ['user_info']
+
+class HealthcareModelForm(ModelForm):
+    class Meta:
+        model = HealthcareModel
+        fields = '__all__'
+        exclude = ['user_info']
 
 class GenericModelForeignForm(ModelForm):
     class Meta:

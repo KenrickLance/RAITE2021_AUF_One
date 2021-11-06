@@ -58,7 +58,6 @@ class PeopleModel(ModelAllowDisplayInfo):
     address_province = models.CharField('Province', max_length=1000)
     address_zip = models.CharField('Zip code', max_length=4)
     government_id = models.FileField('Photo of government-issued ID',upload_to='people_id/')
-    role = models.CharField(null=True, default='', max_length=40, blank=True)
 
     def full_name(self):
         return self.first_name + ' ' + self.middle_name + ' ' + self.last_name
@@ -89,6 +88,40 @@ class VaccineModel(ModelAllowDisplayInfo):
 
     def __str__(self):
         return f'{self.personal_info.last_name}, {self.personal_info.first_name} {self.personal_info.middle_name}'        
+
+class EstablishmentModel(ModelAllowDisplayInfo):
+    user_info = models.ForeignKey(User,related_name='user_info_establishment', on_delete=models.SET_NULL, null=True)
+    name = models.CharField('Name of establishment', max_length=1000)
+    address_full = models.CharField('Full address', max_length=1000)
+    address_barangay = models.CharField('Barangay', max_length=1000)
+    address_city = models.CharField('City/Municipality', max_length=1000)
+    address_province = models.CharField('Province', max_length=1000)
+    address_zip = models.CharField('Zip code', max_length=4)
+
+    def __str__(self):
+        return f'{self.name}'
+
+class HealthcareModel(ModelAllowDisplayInfo):
+    user_info = models.ForeignKey(User,related_name='user_info_healthcare', on_delete=models.SET_NULL, null=True)
+    name = models.CharField('Name of healthcare organization', max_length=1000)
+    address_full = models.CharField('Full address', max_length=1000)
+    address_barangay = models.CharField('Barangay', max_length=1000)
+    address_city = models.CharField('City/Municipality', max_length=1000)
+    address_province = models.CharField('Province', max_length=1000)
+    address_zip = models.CharField('Zip code', max_length=4)
+
+    def __str__(self):
+        return f'{self.name}'
+    
+class RoleModel(ModelAllowDisplayInfo):
+    user_info = models.ForeignKey(User,related_name='user_info_role', on_delete=models.SET_NULL, null=True)
+    role = models.CharField(null=True, default='', max_length=40, blank=True)
+
+class TracingModel(ModelAllowDisplayInfo):
+    establishment = models.CharField(null=True, default='', max_length=400, blank=True)
+    user_info = models.CharField(null=True, default='', max_length=400, blank=True)
+    date = models.DateTimeField('Entry date', auto_now_add=True)
+
 
 class GenericModelForeign(ModelAllowDisplayInfo):
     second_engineer = models.ForeignKey(GenericModelMain, default='', related_name='second_engineer', on_delete=models.SET_NULL, null=True, verbose_name='Second engineer')

@@ -27,6 +27,16 @@ urlpatterns = [
 
 
     path('iris-citizen/register', views.create_people, name='create_people'),
-    path('iris-citizen/personal-info',views.personal_info_people,name='perpersonal_info_peoplesonal_info'),
-    path('iris-citizen/vaccination-info',views.personal_info_people,name='personal_info_people')
+    path('iris-citizen/personal-info',views.personal_info_people,name='personal_info_people'),
+    
+
+    path('iris-establishment/register', views.create_establishment, name='create_establishment'),
+    path('iris-establishment/trace', views.trace_establishment, name='trace_establishment'),
+    path('iris-establishment/view-traces', views.view_trace_establishment, name='view_trace_establishment'),
+    
+path('iris-healthcare/register', views.create_healthcare, name='create_healthcare'),
+path('iris-healthcare/alert', views.alert_healthcare, name='alert_healthcare'),
+
+
+
 ]
