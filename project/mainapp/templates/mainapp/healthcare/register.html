@@ -72,7 +72,7 @@
         html,
 body {
   height: 100%;
-  background-image: url(https://images.unsplash.com/photo-1525026198548-4baa812f1183?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1934&q=80);
+  background-image: url(https://images.unsplash.com/photo-1551884170-09fb70a3a2ed?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -145,9 +145,9 @@ body {
 
 <main class="form-signin px-3 py-3" style="background-color: rgba(82, 82, 82, 0.61); backdrop-filter: blur(5px); border-radius: 10px;">
  
-  <form enctype="multipart/form-data" class="py-3 px-4" method="POST" action="{% url 'mainapp:create_people' %}">
+  <form enctype="multipart/form-data" class="py-3 px-4" method="POST" action="{% url 'mainapp:create_healthcare' %}">
     {%csrf_token%}
-    <p class="text-center h2 text-light py-4">Register for Iris Citizen</p>
+    <p class="text-center h2 text-light py-4">Register for Iris Healthcare</p>
     <div class="row" style="overflow-y: scroll; max-height: 300px;" >
         <div class="col col-12 col-md-6 mb-3">
             <label class="form-label text-light">
@@ -190,24 +190,11 @@ body {
             {{form1.password2|attr:"class:form-control" }}
         </div>
         <hr class="my-4">
-
-        <div class="col col-12 col-md-6 mb-3">
-          <label class="form-label text-light">
-              {{form2.birth_date.label}}
-          </label>
-          {{form2.birth_date|attr:"class:form-control" }}
-        </div>
-        <div class="col col-12 col-md-6 mb-3">
-          <label class="form-label text-light">
-              {{form2.sex.label}}
-          </label>
-          {{form2.sex|attr:"class:form-select" }}
-        </div>
         <div class="col col-12  mb-3">
           <label class="form-label text-light">
-              {{form2.phone.label}}
+              {{form2.name.label}}
           </label>
-          {{form2.phone|attr:"class:form-control" }}
+          {{form2.name|attr:"class:form-control" }}
         </div>
         <div class="col col-12  mb-3">
           <label class="form-label text-light">
@@ -239,12 +226,7 @@ body {
           </label>
           {{form2.address_zip|attr:"class:form-control" }}
         </div>
-        <div class="col col-12  mb-3">
-          <label class="form-label text-light">
-              {{form2.government_id.label}}
-          </label>
-          {{form2.government_id|attr:"class:form-control" }}
-        </div>
+      
         
     </div>
     <div class="d-flex justify-content-end mt-3">

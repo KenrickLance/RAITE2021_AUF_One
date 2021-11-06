@@ -305,15 +305,22 @@
         <div id='wrapper' class="d-flex">
             <div id='regular-sidebar' class="d-flex flex-column flex-shrink-0 p-4 bg-white">
                 <img src=' {% settings_value "APP_LOGO" %}' class='to-hide mx-auto d-block my-4' width="35%">
-                <p class="to-hide name-app fw-bold h6 text-center">{{user.first_name}} {{user.last_name}}</p>
+                <p class="to-hide name-app fw-bold h6 text-center">{{establishment_name}} </p>
                 <p class="to-hide name-app text-center mb-0">{% now "SHORT_DATETIME_FORMAT" %}</p>
                 <hr class="to-hide my-4">
                 <ul class="nav nav-pills flex-column mb-auto">
                    
                     <li class="nav-item mb-3" data-bs-toggle="modal" data-bs-target="#menu_modal">
-                        <a href='{% url "mainapp:personal_info_people" %}' class="nav-link link-dark {% if active_page == 'Personal' %}active-menu{%endif%}">
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                            <span class='nav-inner-text d-inline-block'> Personal Info</span>
+                        <a href='{% url "mainapp:trace_establishment" %}' class="nav-link link-dark {% if active_page == 'Tracing' %}active-menu{%endif%}">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            <span class='nav-inner-text d-inline-block'> Alert</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-3" data-bs-toggle="modal" data-bs-target="#menu_modal">
+                        <a href='{% url "mainapp:view_trace_establishment" %}' class="nav-link link-dark {% if active_page == 'History' %}active-menu{%endif%}">
+                            <i class="bi bi-app-indicator me-2"></i>
+                            <span class='nav-inner-text d-inline-block'> AI Tech</span>
                         </a>
                     </li>
 

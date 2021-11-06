@@ -1,0 +1,85 @@
+{% extends 'mainapp/establishment/base.html' %}
+{% load static %}
+
+{% block content %}
+<p class="h1 fw-bold mb-3">
+    Contact Tracing
+</p>
+<div class="card p-5">
+    <div class="row" >
+        <form method="get" action="{% url 'mainapp:trace_establishment' %}">
+
+       
+        <div class="col col-12 mb-3">
+            <label class="form-label">
+                Identifier number
+            </label>
+            <input type="text" class="form-control w-100" name='id'>
+        </div>
+        <div class="col col-12 mb-3">
+            <button class='btn btn-primary w-100'>Search</button>
+        </div>
+    </form>
+        <hr class="my-5">
+
+        {% if person and details %}
+        <p>
+            <span class="fw-bold">Last name: </span>
+            {{person.last_name}}
+        </p>
+        <p>
+            <span class="fw-bold">First name: </span>
+            {{person.first_name}}
+        </p>
+        <p>
+            <span class="fw-bold">Email: </span>
+            {{person.email}}
+        </p>
+        <p>
+            <span class="fw-bold">Phone number: </span>
+            {{details.phone}}
+        </p>
+        <p>
+            <span class="fw-bold">Address: </span>
+            {{details.address_full}}
+        </p>
+
+        <form method="POST" action='{% url "mainapp:trace_establishment"%}'>
+            {%csrf_token%}
+            <input type="hidden" name='user_info' value="{{person.id}}">
+            <div class="d-flex justify-content-end ">
+               <button type="submit" class="btn btn-success">
+                 Record
+               </button>
+             </div>
+        </form>
+
+        
+        {% else %}
+        <div id='nothing_to_see'>
+            <div class="d-flex justify-content-center mt-4">
+                <i class="bi bi-inbox-fill display-1"></i>
+            </div>
+            <p class="d-flex justify-content-center">
+                Nothing to see here
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .info_update:hover {
+        filter: brightness(110%);
+        transition: 0.2s ease-in;
+    }
+
+ 
+
+</style>
+
+
+
+
+
+{% endblock %}
