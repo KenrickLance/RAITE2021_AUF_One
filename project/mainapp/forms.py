@@ -9,6 +9,10 @@ from .models import PeopleModel, VaccineModel, EstablishmentModel,HealthcareMode
 # date widget = forms.DateInput(attrs={'type': 'date'})
 # datetime widget = forms.DateInput(attrs={'type': 'datetime-local'})
 
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
+
 class GenericModelMainForm(ModelForm):
     class Meta:
         model = GenericModelMain
