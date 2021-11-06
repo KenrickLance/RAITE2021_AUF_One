@@ -1,5 +1,7 @@
-{% extends 'mainapp/base.html' %}
+{% extends 'mainapp/healthcare/base.html' %}
 {% block content %}
+    <h1>COVID/Pneumonia Diagnosis</h1>
+    <br/>
     <form enctype="multipart/form-data" action="{% url 'mainapp:upload' %}" method="post">
     {% csrf_token %}
     {{ form }}

@@ -20,7 +20,6 @@ urlpatterns = [
     path('update_object/<str:pk>',views.update_object,name='update_object'),
     path('delete_object/<str:pk>',views.delete_object,name='delete_object'),
     path('read_objects',views.read_objects,name='read_objects'),
-
     path('ajax_create_object/<str:model_string>', views.ajax_create_object, name='ajax_create_object'),
     path('ajax_read_objects/<str:model_string>', views.ajax_read_objects, name='ajax_read_objects'),
 
@@ -34,8 +33,8 @@ urlpatterns = [
     path('iris-establishment/trace', views.trace_establishment, name='trace_establishment'),
     path('iris-establishment/view-traces', views.view_trace_establishment, name='view_trace_establishment'),
     
-path('iris-healthcare/register', views.create_healthcare, name='create_healthcare'),
-path('iris-healthcare/alert', views.alert_healthcare, name='alert_healthcare'),
+    path('iris-healthcare/register', views.create_healthcare, name='create_healthcare'),
+    path('iris-healthcare/alert', views.alert_healthcare, name='alert_healthcare'),
 
 
 

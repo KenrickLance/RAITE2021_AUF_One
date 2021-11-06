@@ -519,11 +519,11 @@ def upload_tf(request):
             print(class_name)
             msg = 0
             if max_index == 0:
-                msg = 'You are positive for COVID'
+                msg = 'Positive for COVID'
             elif max_index == 1:
-                msg = 'You are negative for both COVID and Viral Pneumonia'
+                msg = 'Negative for both COVID and Viral Pneumonia'
             elif max_index == 2:
-                msg = 'You are Positive for Viral Pneumonia'
+                msg = 'Positive for Viral Pneumonia'
             messages.success(request, msg)
             return redirect('mainapp:upload')
         else:
