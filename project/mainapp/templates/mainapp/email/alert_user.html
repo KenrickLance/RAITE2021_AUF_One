@@ -1,0 +1,37 @@
+{% autoescape off %}
+<b>Dear Mr./Ms. {{ receiver_name }}</b>,
+
+<br><br>
+
+<p>
+    You are receiving this notification as a warning that you should do a 14-day quarantine due to possible infection in the following scenario:
+</p>
+
+<b>
+    <p>Establishment: {{establishment}}</p>
+    <p>Date: {{date}}</p>
+</b>
+
+
+
+
+
+<p>
+If you need any assistance, you may contact any of the following DOH hotlines,
+
+</p>
+<ul>
+    <li>
+        02-894-COVID (02-894-26843) 
+    </li>
+    <li>
+        1555
+    </li>
+</ul>
+
+<p>
+Sincerely,<br>
+<b>{% settings_value 'APP_BRAND' %}</b>
+</p>
+
+{% endautoescape %}

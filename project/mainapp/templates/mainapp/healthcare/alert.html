@@ -7,7 +7,7 @@
 </p>
 <div class="card p-5">
     <div class="row" >
-        <form method="get" action="{% url 'mainapp:trace_establishment' %}">
+        <form method="get" action="{% url 'mainapp:alert_healthcare' %}">
 
        
         <div class="col col-12 mb-3">
@@ -44,7 +44,7 @@
             {{details.address_full}}
         </p>
 
-        <form method="POST" action='{% url "mainapp:trace_establishment"%}'>
+        <form method="POST" action='{% url "mainapp:alert_healthcare"%}'>
             {%csrf_token%}
             <input type="hidden" name='user_info' value="{{person.id}}">
             <div class="d-flex justify-content-end ">

@@ -461,21 +461,56 @@ def create_healthcare(request):
 def alert_healthcare(request):
     if request.method == 'POST':
         id = request.POST['user_info']
-        user_info = get_object_or_404(UserModel,id=id)
-        establishment = get_object_or_404(EstablishmentModel, user_info=request.user)
+        try:
+            user_info = get_object_or_404(UserModel,id=id)
+            tracing = TracingModel.objects.all()
 
-        
-        messages.success(request, 'Successfully added to contact tracing record.')
-        return redirect(request.path_info)
+            for item in tracing:
+                user_info = get_object_or_404(UserModel, pk=item.user_info)
+                establishment = get_object_or_404(EstablishmentModel, pk=item.establishment)
+                send_alert_covid(establishment,item.date,user_info)
+            messages.success(request, 'Successfully alerted the concerned citizens via email.')
+            return redirect(request.path_info)
+        except Exception as err:
+            print(err)
+            messages.error(request, 'A server error has occured.')
+            return redirect(request.path_info)
+       
+
+    
     context = {
         'active_page':'Tracing',
         'establishment_name': get_object_or_404(HealthcareModel, user_info=request.user)
     }
+
+    id = request.GET.get('id')
+    
+    if id:
+        try:
+            id = int(id)
+        except:
+            id = 0
+        try:
+            person = get_object_or_404(UserModel, id=id)
+            details = get_object_or_404(PeopleModel, user_info = person)
+            context['person'] = person
+            context['details'] = details
+        except Exception as err:
+            print(err)
     
     return render(request, 'mainapp/healthcare/alert.html', context)
 
 
-
+def send_alert_covid(establishment, date, user_info):
+    message_context = {
+                        'receiver_name': f"{user_info.first_name} {user_info.last_name}",
+                        'establishment': establishment.name,
+                        'date': date
+                        
+                        }
+    message_plain = ''
+    message_html = render_to_string("mainapp/email/alert_user.html", message_context)
+    send_mail('Quarantine Notification', message_plain, settings.DEFAULT_FROM_EMAIL, [user_info.email], html_message = message_html)
 
 
 
