@@ -18,7 +18,19 @@
 
 ## About The Project
 
+### Goal and Description
+
+IRIS  is a contact tracing app.
+
 With the onset of the pandemic, technology has been a great companion, and key player in managing the situation. Whether we like it or not, the virus is still lurking out there amidst a new normal. Hence, we should not stop trying to build innovative and strategic solutions against it. Well then, what does it mean to traverse the Filipino new normal with technology? I assert that to traverse the Filipino new normal means more than simply developing applications for the welfare of the public. What we need is to dive into the context of being able to adapt research and scientific-based technological solutions in spite of being a developing country, in order to fortify the greatest sector that is directly involved with us, which is the healthcare system. Thus, I would like to introduce Iris: Responding with Artificial Intelligence to the Challenges of the Healthcare System.
+
+### Target Audience
+
+This application is the healthcare industry and the public 
+
+### Scope and Limitation
+
+This application uses artifical intelligence to enhance healthcare diagnosis
 
 ### Built With
 * [Python](https://www.python.org/)
