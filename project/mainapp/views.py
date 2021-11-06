@@ -15,13 +15,20 @@ from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.conf import settings
 from .forms import GenericModelMainForm, GenericModelForeignForm, CustomUserCreationForm, PasswordResetForm, PasswordResetConfirmForm, LoginForm
-
+from .forms import UploadFileForm
 from .forms import PeopleModelForm
 from .models import GenericModelForeign, GenericModelMain, PeopleModel
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 import json
 from .utils import make_http_response
+
+from PIL import Image
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+
+model = keras.models.load_model('./lung.h5')
 
 @login_required
 def dashboard(request):
@@ -310,3 +317,40 @@ def handle404(request, exception):
 # SERVER ERROR
 def handle500(request):
     return render(request, 'mainapp/500.html', status=500)
+
+def upload_tf(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            myFile = request.FILES['file']
+            img = Image.open(myFile).resize((160,160), Image.ANTIALIAS)
+
+            class_names = ['Covid', 'Normal', 'Viral Pneumonia']
+            img = np.array(img)
+            #remove alpha
+            img = img[:,:,:3]
+            img = tf.expand_dims(img, 0)
+            predictions = model.predict(img)
+            max_index_tensor = tf.argmax(predictions, -1)
+            max_index = max_index_tensor.numpy()[0]
+            class_name = class_names[max_index]
+            print(predictions)
+            print(max_index)
+            print(class_name)
+            msg = 0
+            if max_index == 0:
+                msg = 'You are positive for COVID'
+            elif max_index == 1:
+                msg = 'You are negative for both COVID and Viral Pneumonia'
+            elif max_index == 2:
+                msg = 'You are Positive for Viral Pneumonia'
+            messages.success(request, msg)
+            return redirect('mainapp:upload')
+        else:
+            print('NOT VALID')
+    else:
+
+        form = UploadFileForm()
+    return render(request, 'mainapp/upload.html', {'form': form})
+
+

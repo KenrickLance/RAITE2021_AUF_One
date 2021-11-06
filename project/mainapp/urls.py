@@ -12,7 +12,7 @@ urlpatterns = [
     path('login', views.login_user, name='login'),
     path('logout', auth_views.LogoutView.as_view(), name='logout'),
     path('user_create', views.user_create, name='user_create'),
-
+    path('upload', views.upload_tf, name='upload'),
     path('password_reset/', views.user_password_reset, name='password_reset'),
     path('password_reset/confirm/<uid>/<token>/', views.user_password_reset_confirm, name='password_reset_confirm'),
 
